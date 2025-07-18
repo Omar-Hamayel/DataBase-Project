@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="../css/order.css">
+    <title>Orders</title>
+</head>
+<body>
+
+    <section class="min-h-screen py-8 antialiased md:py-16" style="background-image: linear-gradient(135deg, var(--color-primary-900), var(--color-primary-300), var(--color-primary-900)) !important;">
+        <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+            <div class="mx-auto max-w-5xl">
+                <!-- Header and Filters -->
+                <div class="gap-4 sm:flex sm:items-center sm:justify-between">
+                    <h2 class="text-2xl font-bold text-white sm:text-3xl hover:text-primary-200 transition-colors">My Orders</h2>
+                    <div class="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
+                    <div>
+                        <label for="order-type" class="sr-only mb-2 block text-sm font-medium text-white">Select order type</label>
+                        <select id="order-type" style="width: 123px;" class="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-white/90 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 hover:border-primary-300 transition-colors">
+                            <option value="all">All Orders</option>
+                            <option value="waiting">Waiting</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="in_transit">In Transit</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                        <span class="inline-block text-white/80 hover:text-primary-200 transition-colors"> from </span>
+                    <div>
+                        <label for="duration" class="sr-only mb-2 block text-sm font-medium text-white">Select duration</label>
+                            <select id="month-filter" style="width: 123px;" class="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-white/90 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 hover:border-primary-300 transition-colors">
+                                <option value="all">All Months</option>
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                            </select>
+                    </div>
+                    <div id="filter-description" class="text-sm text-gray-500 mb-4"></div>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="mt-6 bg-white/90 rounded-lg p-4 shadow-sm" style="background: white;">
+                    <div id="order-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm md:text-base">
+                        <div class="text-center">
+                            <p class="text-gray-500">Total Orders</p>
+                            <p id="total-orders" class="font-medium text-lg">0</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-500">Total Spent</p>
+                            <p id="total-spent" class="font-medium text-lg">$0.00</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-500">Avg. Order</p>
+                            <p id="avg-order" class="font-medium text-lg">$0.00</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Optional: Additional summary info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-sm text-gray-500">
+                        <p>First order: <span id="first-order-date" class="text-gray-700">N/A</span></p>
+                        <p>Last order: <span id="last-order-date" class="text-gray-700">N/A</span></p>
+                    </div>
+                </div>
+                <!-- Charts Section -->
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Monthly Spending Chart -->
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h3 class="text-lg font-semibold mb-4">Monthly Spending</h3>
+                        <canvas id="monthlySpendingChart" height="300"></canvas>
+                    </div>
+                    
+                    <!-- Order Status Chart -->
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h3 class="text-lg font-semibold mb-4">Order Status Distribution</h3>
+                        <canvas id="orderStatusChart" height="300"></canvas>
+                    </div>
+                </div>
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="mt-8 text-center hidden">
+                    <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary-500 border-r-transparent"></div>
+                    <span class="ml-2">Loading orders...</span>
+                </div>
+
+                <!-- Orders Container -->
+                <div class="mt-6 flow-root sm:mt-8">
+                    <div id="orders-container" class="space-y-4">
+                        <!-- Orders will be dynamically inserted here by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Error Container -->
+                <div id="error-container" class="mt-4 hidden"></div>
+
+                <!-- Pagination -->
+                <div id="orders-pagination" class="pagination">
+                    <ul></ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/order.js"></script>
+</body>
+</html>
